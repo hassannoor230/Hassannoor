@@ -22,7 +22,7 @@ export async function getProjects(): Promise<Project[]> {
   const r = await call('/projects');
   if (!r || r.status === 404) return fallbackProjects;
   const items = Array.isArray(r.data) ? r.data : r.data?.items;
-  return r.status === 200 && Array.isArray(items) ? items : [];
+  return r.status === 200 && Array.isArray(items) ? items.map(normalizeProjectMedia) : [];
 }
 export async function getCategories(): Promise<Category[]> {
   const r = await call('/categories');
@@ -33,10 +33,25 @@ export async function getCategories(): Promise<Category[]> {
 export async function getProject(slug: string): Promise<Project | null> {
   const r = await call(`/projects/${encodeURIComponent(slug)}`);
   if (!r) return fallbackProjects.find((p) => p.slug === slug) ?? null;
-  return r.status === 200 ? r.data : null;
+  return r.status === 200 ? normalizeProjectMedia(r.data) : null;
 }
 export function absoluteUrl(path: string) {
-  return new URL(path, `${apiOrigin}/`).toString();
+  const url = new URL(path, `${apiOrigin || 'http://localhost:4000'}/`);
+  if (['localhost', '127.0.0.1', '[::1]'].includes(url.hostname)) {
+    if (!apiOrigin) return `${url.pathname}${url.search}${url.hash}`;
+    return new URL(`${url.pathname}${url.search}${url.hash}`, `${apiOrigin}/`).toString();
+  }
+  return url.toString();
+}
+
+function normalizeProjectMedia(project: Project): Project {
+  return {
+    ...project,
+    coverImage: project.coverImage?.url
+      ? { ...project.coverImage, url: absoluteUrl(project.coverImage.url) }
+      : project.coverImage,
+    gallery: project.gallery?.map((image) => ({ ...image, url: absoluteUrl(image.url) })),
+  };
 }
 // Returns null until a profile is saved from the admin dashboard, so the site config in lib/site stays in charge.
 export async function getProfile(): Promise<SiteProfile | null> {
