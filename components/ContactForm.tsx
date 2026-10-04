@@ -27,8 +27,8 @@ export default function ContactForm() {
   async function onSubmit(v: Values) {
     setState(null);
     if (!API) return setState({ ok: false, msg: 'The contact service is not configured yet, so your message was not sent.' });
-    try {
-      const r = await fetch(`${API}/contact`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(v) });
+try {
+       const r = await fetch(`${API}/api/v1/contact`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(v) });
       const j = await r.json().catch(() => null);
       if (r.ok && j?.success) { reset(); setState({ ok: true, msg: "Thanks for contacting us. We'll get back to you within 24 hours." }); }
       else setState({ ok: false, msg: j?.error?.message || 'Your message could not be sent. Please try again.' });
