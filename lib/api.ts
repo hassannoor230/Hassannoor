@@ -1,10 +1,11 @@
 import { fallbackProjects } from './data';
 import type { Category, Project, SiteProfile } from './types';
 const configuredApi = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, '');
-const API = configuredApi
-  ? configuredApi.endsWith('/api/v1') ? configuredApi : `${configuredApi}/api/v1`
+const normalizedApi = configuredApi?.replace(/\/api\/?$/, '');
+const API = normalizedApi
+  ? normalizedApi.endsWith('/api/v1') ? normalizedApi : `${normalizedApi}/api/v1`
   : undefined;
-export const apiOrigin = configuredApi?.replace(/\/api\/v1\/?$/, '') ?? '';
+export const apiOrigin = normalizedApi?.replace(/\/api\/v1\/?$/, '') ?? '';
 const fallbackCategories: Category[] = [...new Map(
   fallbackProjects.filter((project) => project.category).map((project) => [project.category!.slug, project.category!]),
 ).values()];
