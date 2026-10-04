@@ -4,6 +4,7 @@ import { ChevronDown } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { apiBase } from '@/lib/api-client';
 
 const schema = z.object({
   name: z.string().trim().min(2, 'Please enter your name').max(100),
@@ -16,7 +17,6 @@ const schema = z.object({
   website: z.string().max(0).optional(), // honeypot
 });
 type Values = z.infer<typeof schema>;
-const API = process.env.NEXT_PUBLIC_API_URL;
 const field = 'w-full border-0 border-b border-ivory/25 bg-transparent py-3 text-ivory placeholder:text-silver/50 focus:border-gold focus:outline-none';
 const selectField = 'w-full appearance-none border-0 border-b border-ivory/25 bg-[#08090B] py-3 pr-10 text-ivory scheme-dark focus:border-gold focus:outline-none';
 
@@ -26,9 +26,9 @@ export default function ContactForm() {
 
   async function onSubmit(v: Values) {
     setState(null);
-    if (!API) return setState({ ok: false, msg: 'The contact service is not configured yet, so your message was not sent.' });
-try {
-       const r = await fetch(`${API}/api/v1/contact`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(v) });
+    if (!apiBase) return setState({ ok: false, msg: 'The contact service is not configured yet, so your message was not sent.' });
+    try {
+      const r = await fetch(`${apiBase}/contact`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(v) });
       const j = await r.json().catch(() => null);
       if (r.ok && j?.success) { reset(); setState({ ok: true, msg: "Thanks for contacting us. We'll get back to you within 24 hours." }); }
       else setState({ ok: false, msg: j?.error?.message || 'Your message could not be sent. Please try again.' });
