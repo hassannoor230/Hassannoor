@@ -1,0 +1,7 @@
+@tailwind base; @tailwind components; @tailwind utilities;
+html { background: #08090B; color: #F5F1E8; }
+body { font-family: Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+::selection { background: #C7A56A; color: #08090B; }
+:focus-visible { outline: 1px solid #C7A56A; outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+@media (hover: hover) and (pointer: fine) and (min-width: 1024px) { body.has-cursor, body.has-cursor a, body.has-cursor button { cursor: none; } }
