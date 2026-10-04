@@ -30,7 +30,7 @@ export default function ContactForm() {
     try {
       const r = await fetch(`${API}/contact`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(v) });
       const j = await r.json().catch(() => null);
-      if (r.ok && j?.success) { reset(); setState({ ok: true, msg: 'Thank you. Your message was received.' }); }
+      if (r.ok && j?.success) { reset(); setState({ ok: true, msg: "Thanks for contacting us. We'll get back to you within 24 hours." }); }
       else setState({ ok: false, msg: j?.error?.message || 'Your message could not be sent. Please try again.' });
     } catch { setState({ ok: false, msg: 'Network error. Your message was not sent.' }); }
   }

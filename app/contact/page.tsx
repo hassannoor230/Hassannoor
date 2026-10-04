@@ -5,7 +5,7 @@ import { site } from '@/lib/site';
 export const metadata: Metadata = { title: 'Contact', alternates: { canonical: '/contact' } };
 
 export default function Contact() {
-  return (<><PageHeader eyebrow="Contact" title="Start a project" intro="Tell me about what you're building. Your message is saved securely and I'll get back to you." />
+  return (<><PageHeader eyebrow="Contact" title="Start a project" intro="Tell me about what you're building. Your message will be sent securely, and I'll get back to you within 24 hours." />
     <Container className="grid gap-16 md:grid-cols-12">
       <div className="md:col-span-8"><ContactForm /></div>
       <aside className="md:col-span-3 md:col-start-10">
